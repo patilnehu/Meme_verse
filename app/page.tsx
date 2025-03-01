@@ -99,7 +99,7 @@ export default function Home() {
                 Hot Memes
               </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Check out what&apos;s making the internet laugh today.
+                Check out what's making the internet laugh today.
               </p>
             </motion.div>
           </div>

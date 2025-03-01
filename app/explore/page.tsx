@@ -1,68 +1,77 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect, useState, useCallback } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import type { AppDispatch, RootState } from "@/redux/store"
-import { fetchMemes, searchMemes, filterMemesByCategory, sortMemes } from "@/redux/features/memes/memesSlice"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import Link from "next/link"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import { Heart, MessageCircle, Search } from "lucide-react"
-import { debounce } from "@/lib/utils"
+import { useEffect, useState, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/redux/store";
+import {
+  fetchMemes,
+  searchMemes,
+  filterMemesByCategory,
+  sortMemes,
+} from "@/redux/features/memes/memesSlice";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Heart, MessageCircle, Search } from "lucide-react";
 
 export default function ExplorePage() {
-  const dispatch = useDispatch<AppDispatch>()
-  const { items, searchResults, status } = useSelector((state: RootState) => state.memes)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [currentPage, setCurrentPage] = useState(1)
-  const [selectedCategory, setSelectedCategory] = useState("All")
-  const [sortBy, setSortBy] = useState<"likes" | "date">("likes")
+  const dispatch = useDispatch<AppDispatch>();
+  const { items, searchResults, status } = useSelector(
+    (state: RootState) => state.memes
+  );
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sortBy, setSortBy] = useState<"likes" | "date">("likes");
 
-  const itemsPerPage = 12
-  const totalPages = Math.ceil(searchResults.length / itemsPerPage)
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(searchResults.length / itemsPerPage);
 
   useEffect(() => {
     if (status === "idle") {
-      dispatch(fetchMemes())
+      dispatch(fetchMemes());
     }
-  }, [dispatch, status])
+  }, [dispatch, status]);
 
   // Debounced search function
   const debouncedSearch = useCallback(
-    debounce((query: string) => {
-      dispatch(searchMemes(query))
-    }, 300),
-    [],
-  )
+    (query: string) => {
+      dispatch(searchMemes(query));
+    },
+    [dispatch]
+  );
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const query = e.target.value
-    setSearchQuery(query)
-    debouncedSearch(query)
-  }
+    const query = e.target.value;
+    setSearchQuery(query);
+    debouncedSearch(query);
+  };
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category)
-    setCurrentPage(1)
+    setSelectedCategory(category);
+    setCurrentPage(1);
 
     if (category === "All") {
-      dispatch(searchMemes(""))
+      dispatch(searchMemes(""));
     } else {
-      dispatch(filterMemesByCategory(category))
+      dispatch(filterMemesByCategory(category));
     }
-  }
+  };
 
   const handleSortChange = (sortType: "likes" | "date") => {
-    setSortBy(sortType)
-    dispatch(sortMemes(sortType))
-  }
+    setSortBy(sortType);
+    dispatch(sortMemes(sortType));
+  };
 
   // Get current page items
-  const currentItems = searchResults.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+  const currentItems = searchResults.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const container = {
     hidden: { opacity: 0 },
@@ -72,12 +81,12 @@ export default function ExplorePage() {
         staggerChildren: 0.05,
       },
     },
-  }
+  };
 
   const item = {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 },
-  }
+  };
 
   return (
     <div className="container px-4 py-8 md:px-6 md:py-12">
@@ -134,7 +143,12 @@ export default function ExplorePage() {
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
           </div>
         ) : currentItems.length > 0 ? (
-          <motion.div variants={container} initial="hidden" animate="show" className="meme-grid w-full mt-6">
+          <motion.div
+            variants={container}
+            initial="hidden"
+            animate="show"
+            className="meme-grid w-full mt-6"
+          >
             {currentItems.map((meme) => (
               <motion.div
                 key={meme.id}
@@ -170,12 +184,14 @@ export default function ExplorePage() {
           </motion.div>
         ) : (
           <div className="flex flex-col items-center justify-center w-full min-h-[300px] text-center">
-            <p className="text-muted-foreground mb-4">No memes found matching your search.</p>
+            <p className="text-muted-foreground mb-4">
+              No memes found matching your search.
+            </p>
             <Button
               onClick={() => {
-                setSearchQuery("")
-                setSelectedCategory("All")
-                dispatch(searchMemes(""))
+                setSearchQuery("");
+                setSelectedCategory("All");
+                dispatch(searchMemes(""));
               }}
             >
               Clear Filters
@@ -198,15 +214,15 @@ export default function ExplorePage() {
 
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                 // Calculate page numbers to show (centered around current page)
-                let pageNum
+                let pageNum;
                 if (totalPages <= 5) {
-                  pageNum = i + 1
+                  pageNum = i + 1;
                 } else if (currentPage <= 3) {
-                  pageNum = i + 1
+                  pageNum = i + 1;
                 } else if (currentPage >= totalPages - 2) {
-                  pageNum = totalPages - 4 + i
+                  pageNum = totalPages - 4 + i;
                 } else {
-                  pageNum = currentPage - 2 + i
+                  pageNum = currentPage - 2 + i;
                 }
 
                 return (
@@ -218,13 +234,15 @@ export default function ExplorePage() {
                   >
                     {pageNum}
                   </Button>
-                )
+                );
               })}
 
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
               >
                 Next
@@ -234,6 +252,5 @@ export default function ExplorePage() {
         )}
       </div>
     </div>
-  )
+  );
 }
-
