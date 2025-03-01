@@ -1,48 +1,60 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useEffect, useState, useRef } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import type { AppDispatch, RootState } from "@/redux/store"
-import { loadUserMemes, loadLikedMemes } from "@/redux/features/memes/memesSlice"
-import { updateProfile, loadUserProfile } from "@/redux/features/user/userSlice"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
-import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { Heart, MessageCircle, Edit, User, Check, X } from "lucide-react"
+import { useEffect, useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/redux/store";
+import {
+  loadUserMemes,
+  loadLikedMemes,
+} from "@/redux/features/memes/memesSlice";
+import {
+  updateProfile,
+  loadUserProfile,
+} from "@/redux/features/user/userSlice";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Heart, MessageCircle, Edit, User, Check, X } from "lucide-react";
 
 export default function ProfilePage() {
-  const dispatch = useDispatch<AppDispatch>()
-  const { toast } = useToast()
-  const { userMemes, items, likedMemes } = useSelector((state: RootState) => state.memes)
-  const { currentUser } = useSelector((state: RootState) => state.user)
+  const dispatch = useDispatch<AppDispatch>();
+  const { toast } = useToast();
+  const { userMemes, items, likedMemes } = useSelector(
+    (state: RootState) => state.memes
+  );
+  const { currentUser } = useSelector((state: RootState) => state.user);
 
-  const [isEditing, setIsEditing] = useState(false)
-  const [name, setName] = useState(currentUser.name)
-  const [bio, setBio] = useState(currentUser.bio)
-  const [profilePicture, setProfilePicture] = useState(currentUser.profilePicture)
-  const [activeTab, setActiveTab] = useState<"uploads" | "likes">("uploads")
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState(currentUser.name);
+  const [bio, setBio] = useState(currentUser.bio);
+  const [profilePicture, setProfilePicture] = useState(
+    currentUser.profilePicture
+  );
+  const [activeTab, setActiveTab] = useState<"uploads" | "likes">("uploads");
 
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    dispatch(loadUserProfile())
-    dispatch(loadUserMemes())
-    dispatch(loadLikedMemes())
-  }, [dispatch])
+    dispatch(loadUserProfile());
+    dispatch(loadUserMemes());
+    dispatch(loadLikedMemes());
+  }, [dispatch]);
 
   // Get liked memes from the store
-  const likedMemesData = items.filter((meme) => likedMemes.includes(meme.id))
+  const likedMemesData = items.filter((meme) => likedMemes.includes(meme.id));
 
-  const handleProfilePictureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+  const handleProfilePictureChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
 
-    if (!file) return
+    if (!file) return;
 
     // Check if file is an image
     if (!file.type.match("image.*")) {
@@ -50,8 +62,8 @@ export default function ProfilePage() {
         title: "Invalid file type",
         description: "Please upload an image file (JPEG, PNG, GIF).",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     // Check file size (max 2MB)
@@ -60,17 +72,17 @@ export default function ProfilePage() {
         title: "File too large",
         description: "Please upload an image smaller than 2MB.",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     // Create preview
-    const reader = new FileReader()
+    const reader = new FileReader();
     reader.onloadend = () => {
-      setProfilePicture(reader.result as string)
-    }
-    reader.readAsDataURL(file)
-  }
+      setProfilePicture(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSaveProfile = () => {
     if (!name.trim()) {
@@ -78,8 +90,8 @@ export default function ProfilePage() {
         title: "Name required",
         description: "Please enter a display name.",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     dispatch(
@@ -87,23 +99,23 @@ export default function ProfilePage() {
         name,
         bio,
         profilePicture,
-      }),
-    )
+      })
+    );
 
-    setIsEditing(false)
+    setIsEditing(false);
 
     toast({
       title: "Profile updated",
       description: "Your profile has been successfully updated.",
-    })
-  }
+    });
+  };
 
   const handleCancelEdit = () => {
-    setName(currentUser.name)
-    setBio(currentUser.bio)
-    setProfilePicture(currentUser.profilePicture)
-    setIsEditing(false)
-  }
+    setName(currentUser.name);
+    setBio(currentUser.bio);
+    setProfilePicture(currentUser.profilePicture);
+    setIsEditing(false);
+  };
 
   const container = {
     hidden: { opacity: 0 },
@@ -113,12 +125,12 @@ export default function ProfilePage() {
         staggerChildren: 0.05,
       },
     },
-  }
+  };
 
   const item = {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 },
-  }
+  };
 
   return (
     <div className="container px-4 py-8 md:px-6 md:py-12">
@@ -166,17 +178,33 @@ export default function ProfilePage() {
               {isEditing ? (
                 <div className="w-full space-y-4">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Display Name
                     </label>
-                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="max-w-md" />
+                    <Input
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="max-w-md"
+                    />
                   </div>
 
                   <div>
-                    <label htmlFor="bio" className="block text-sm font-medium mb-1">
+                    <label
+                      htmlFor="bio"
+                      className="block text-sm font-medium mb-1"
+                    >
                       Bio
                     </label>
-                    <Textarea id="bio" value={bio} onChange={(e) => setBio(e.target.value)} className="max-w-md" />
+                    <Textarea
+                      id="bio"
+                      value={bio}
+                      onChange={(e) => setBio(e.target.value)}
+                      className="max-w-md"
+                    />
                   </div>
 
                   <div className="flex gap-2">
@@ -194,12 +222,18 @@ export default function ProfilePage() {
                 <>
                   <div className="flex items-center gap-4">
                     <h1 className="text-2xl font-bold">{currentUser.name}</h1>
-                    <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsEditing(true)}
+                    >
                       <Edit className="h-4 w-4 mr-2" />
                       Edit Profile
                     </Button>
                   </div>
-                  <p className="text-muted-foreground mt-2 text-center md:text-left">{currentUser.bio}</p>
+                  <p className="text-muted-foreground mt-2 text-center md:text-left">
+                    {currentUser.bio}
+                  </p>
 
                   <div className="flex gap-4 mt-4">
                     <div className="text-center">
@@ -221,7 +255,9 @@ export default function ProfilePage() {
             <div className="flex space-x-8">
               <button
                 className={`pb-4 font-medium text-sm ${
-                  activeTab === "uploads" ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
+                  activeTab === "uploads"
+                    ? "border-b-2 border-primary text-primary"
+                    : "text-muted-foreground"
                 }`}
                 onClick={() => setActiveTab("uploads")}
               >
@@ -229,7 +265,9 @@ export default function ProfilePage() {
               </button>
               <button
                 className={`pb-4 font-medium text-sm ${
-                  activeTab === "likes" ? "border-b-2 border-primary text-primary" : "text-muted-foreground"
+                  activeTab === "likes"
+                    ? "border-b-2 border-primary text-primary"
+                    : "text-muted-foreground"
                 }`}
                 onClick={() => setActiveTab("likes")}
               >
@@ -241,7 +279,12 @@ export default function ProfilePage() {
           {/* Memes Grid */}
           {activeTab === "uploads" ? (
             userMemes.length > 0 ? (
-              <motion.div variants={container} initial="hidden" animate="show" className="meme-grid">
+              <motion.div
+                variants={container}
+                initial="hidden"
+                animate="show"
+                className="meme-grid"
+              >
                 {userMemes.map((meme) => (
                   <motion.div
                     key={meme.id}
@@ -281,14 +324,21 @@ export default function ProfilePage() {
                   <User className="h-8 w-8 text-muted-foreground" />
                 </div>
                 <h3 className="text-lg font-medium">No uploads yet</h3>
-                <p className="text-muted-foreground mt-1 mb-4">You haven't uploaded any memes yet.</p>
+                <p className="text-muted-foreground mt-1 mb-4">
+                  You haven&apos;t uploaded any memes yet.
+                </p>
                 <Button asChild>
                   <Link href="/upload">Upload a Meme</Link>
                 </Button>
               </div>
             )
           ) : likedMemesData.length > 0 ? (
-            <motion.div variants={container} initial="hidden" animate="show" className="meme-grid">
+            <motion.div
+              variants={container}
+              initial="hidden"
+              animate="show"
+              className="meme-grid"
+            >
               {likedMemesData.map((meme) => (
                 <motion.div
                   key={meme.id}
@@ -328,7 +378,9 @@ export default function ProfilePage() {
                 <Heart className="h-8 w-8 text-muted-foreground" />
               </div>
               <h3 className="text-lg font-medium">No liked memes</h3>
-              <p className="text-muted-foreground mt-1 mb-4">You haven't liked any memes yet.</p>
+              <p className="text-muted-foreground mt-1 mb-4">
+                You haven&apos;t liked any memes yet.
+              </p>
               <Button asChild>
                 <Link href="/explore">Explore Memes</Link>
               </Button>
@@ -337,6 +389,5 @@ export default function ProfilePage() {
         </motion.div>
       </div>
     </div>
-  )
+  );
 }
-

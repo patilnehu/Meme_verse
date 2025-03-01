@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import { Home, Search } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Home, Search } from "lucide-react";
 
 export default function NotFound() {
   // Random 404 meme images
@@ -12,10 +12,10 @@ export default function NotFound() {
     "https://i.imgflip.com/7ry9g1.jpg",
     "https://i.imgflip.com/7ry9jt.jpg",
     "https://i.imgflip.com/7ry9n3.jpg",
-  ]
+  ];
 
   // Pick a random meme
-  const randomMeme = memeImages[Math.floor(Math.random() * memeImages.length)]
+  const randomMeme = memeImages[Math.floor(Math.random() * memeImages.length)];
 
   return (
     <div className="container flex flex-col items-center justify-center min-h-[80vh] px-4 py-8 md:px-6 md:py-12 text-center">
@@ -37,7 +37,9 @@ export default function NotFound() {
 
         <h1 className="text-4xl font-bold tracking-tight mb-2">404</h1>
         <p className="text-xl font-medium mb-1">Page Not Found</p>
-        <p className="text-muted-foreground mb-8">The page you're looking for has gone to find better memes.</p>
+        <p className="text-muted-foreground mb-8">
+          The page you&apos;re looking for has gone to find better memes.
+        </p>
 
         <div className="flex flex-col sm:flex-row gap-4">
           <Button asChild size="lg">
@@ -55,6 +57,5 @@ export default function NotFound() {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
-

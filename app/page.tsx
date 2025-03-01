@@ -1,30 +1,34 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import type { AppDispatch, RootState } from "@/redux/store"
-import { fetchMemes, loadLikedMemes, loadUserMemes } from "@/redux/features/memes/memesSlice"
-import { loadUserProfile } from "@/redux/features/user/userSlice"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import { Heart, MessageCircle, TrendingUp } from "lucide-react"
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/redux/store";
+import {
+  fetchMemes,
+  loadLikedMemes,
+  loadUserMemes,
+} from "@/redux/features/memes/memesSlice";
+import { loadUserProfile } from "@/redux/features/user/userSlice";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import Image from "next/image";
+import { motion } from "framer-motion";
+import { Heart, MessageCircle, TrendingUp } from "lucide-react";
 
 export default function Home() {
-  const dispatch = useDispatch<AppDispatch>()
-  const { trending, status } = useSelector((state: RootState) => state.memes)
+  const dispatch = useDispatch<AppDispatch>();
+  const { trending, status } = useSelector((state: RootState) => state.memes);
 
   useEffect(() => {
     // Load data from localStorage and API
-    dispatch(loadLikedMemes())
-    dispatch(loadUserMemes())
-    dispatch(loadUserProfile())
+    dispatch(loadLikedMemes());
+    dispatch(loadUserMemes());
+    dispatch(loadUserProfile());
 
     if (status === "idle") {
-      dispatch(fetchMemes())
+      dispatch(fetchMemes());
     }
-  }, [dispatch, status])
+  }, [dispatch, status]);
 
   const container = {
     hidden: { opacity: 0 },
@@ -34,12 +38,12 @@ export default function Home() {
         staggerChildren: 0.1,
       },
     },
-  }
+  };
 
   const item = {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 },
-  }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -91,9 +95,11 @@ export default function Home() {
                 <TrendingUp className="mr-1 h-4 w-4" />
                 Trending Now
               </div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Hot Memes</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Hot Memes
+              </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                Check out what's making the internet laugh today.
+                Check out what&apos;s making the internet laugh today.
               </p>
             </motion.div>
           </div>
@@ -103,7 +109,12 @@ export default function Home() {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
           ) : (
-            <motion.div variants={container} initial="hidden" animate="show" className="meme-grid mt-8">
+            <motion.div
+              variants={container}
+              initial="hidden"
+              animate="show"
+              className="meme-grid mt-8"
+            >
               {trending.slice(0, 6).map((meme) => (
                 <motion.div
                   key={meme.id}
@@ -158,7 +169,9 @@ export default function Home() {
               viewport={{ once: true }}
               className="space-y-2"
             >
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Features</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Features
+              </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Everything you need to enjoy and create memes in one place.
               </p>
@@ -168,19 +181,22 @@ export default function Home() {
               {[
                 {
                   title: "Explore Memes",
-                  description: "Browse through thousands of memes with our intuitive interface.",
+                  description:
+                    "Browse through thousands of memes with our intuitive interface.",
                   icon: "🔍",
                   link: "/explore",
                 },
                 {
                   title: "Create Memes",
-                  description: "Upload and customize your own memes with our easy-to-use editor.",
+                  description:
+                    "Upload and customize your own memes with our easy-to-use editor.",
                   icon: "🎨",
                   link: "/upload",
                 },
                 {
                   title: "Share & Interact",
-                  description: "Like, comment, and share your favorite memes with friends.",
+                  description:
+                    "Like, comment, and share your favorite memes with friends.",
                   icon: "❤️",
                   link: "/explore",
                 },
@@ -197,7 +213,9 @@ export default function Home() {
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-bold">{feature.title}</h3>
-                  <p className="text-muted-foreground text-center">{feature.description}</p>
+                  <p className="text-muted-foreground text-center">
+                    {feature.description}
+                  </p>
                   <Button asChild variant="link">
                     <Link href={feature.link}>Learn more</Link>
                   </Button>
@@ -219,7 +237,9 @@ export default function Home() {
               viewport={{ once: true }}
               className="space-y-2"
             >
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Ready to Join the Fun?</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                Ready to Join the Fun?
+              </h2>
               <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Start exploring and creating memes today!
               </p>
@@ -236,6 +256,5 @@ export default function Home() {
         </div>
       </section>
     </div>
-  )
+  );
 }
-
